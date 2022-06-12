@@ -1,16 +1,39 @@
+import {
+  BoxGeometry,
+  Mesh,
+  MeshBasicMaterial,
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+} from "three";
 import "./style.css";
 
-interface TitleProps {
-  content: string;
-}
+const scene = new Scene();
+const camera = new PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 
-const Title = ({ content }: TitleProps) => {
-  const element = document.createElement("h1");
+const renderer = new WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-  element.classList.add("title");
-  element.textContent = content;
+document.body.appendChild(renderer.domElement);
 
-  return element;
-};
+const geometry = new BoxGeometry(1, 1, 1);
+const material = new MeshBasicMaterial({ color: 0xffffff });
+const cube = new Mesh(geometry, material);
 
-document.body.appendChild(Title({ content: "MIR" }));
+scene.add(cube);
+
+camera.position.z = 5;
+
+renderer.setAnimationLoop(() => {
+  cube.rotation.x += 0.05;
+  cube.rotation.y += 0.05;
+
+  camera.position.z += 0.05;
+
+  renderer.render(scene, camera);
+});
